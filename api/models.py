@@ -3,6 +3,7 @@ from distutils.command.upload import upload
 from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Count
 # Create your models here.
 class Questions(models.Model):
     title=models.CharField(max_length=250)
@@ -13,6 +14,10 @@ class Questions(models.Model):
 
     def __str__(self):
         return self.title
+    
+    @property
+    def question_answer(self):
+        return self.answers_set.all()
 
 class Answers(models.Model):
     question=models.ForeignKey(Questions,on_delete=models.CASCADE)
@@ -23,3 +28,6 @@ class Answers(models.Model):
 
     def __str__(self):
         return self.answer
+    @property
+    def votecount(self):
+        return self.upvote.all().count()
